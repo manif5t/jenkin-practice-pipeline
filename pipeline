@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        label 'node'
+    }
+    
+    stages {
+        stage('checkout') {
+            steps {
+                git 'https://github.com/Gopinadh88/my-app.git'
+            }
+        }
+        stage('Artifact') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Deployment') {
+            steps {
+                deploy adapters: [
+                   tomcat9(
+                    credentialsId: '8314056e-9087-4c4b-8c14-cd7abf684862',
+                    path: '',
+                    url: 'http://34.201.58.28:8080///'
+                    )
+                ],
+                contextPath: 'my-app',
+                war: 'target/*.war'
+            }
+        }
+    }
+}
